@@ -20,7 +20,7 @@ export default function Register() {
         email,
         password
     }
-    const response = await axios.post('/api/users/register',user,{withCredentials:true});
+    const response = await axios.post('/api/users/register',user,);
     if(response.status == 201){
         console.log("success:",response)
         console.log(response.data.token)

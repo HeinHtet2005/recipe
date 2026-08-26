@@ -19,7 +19,6 @@ export default function Login() {
       const response = await axios.post(
         "/api/users/login",
         user,
-        {withCredentials:true}
       );
       if (response.status == 201) {
         console.log("Login Success");
