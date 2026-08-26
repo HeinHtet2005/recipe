@@ -1,5 +1,5 @@
 
-const Recipe = require("../models/recipe");
+const Recipe = require("../models/Recipe");
 const mongoose = require('mongoose')
 const RecipeController = {
     index:async(req,res)=>{

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import plus from "../assets/plus.svg";
 import Ingredients from "../components/Ingredients";
 import { useNavigate,useParams } from "react-router";
-import axios from "axios";
+import axios from "../helpers/axios";
 export default function RecipeForm() {
   const {id} = useParams();
   const navigate = useNavigate();
@@ -27,10 +27,7 @@ export default function RecipeForm() {
     };
 
     try {
-      const response = id ? await axios.patch( "http://localhost:4000/api/recipes/"+id,recipe):await axios.post("http://localhost:4000/api/recipes",recipe,);
-     
-      
-
+      const response = id ? await axios.patch( "/api/recipes/"+id,recipe):await axios.post("/api/recipes",recipe,);
       if (response.status === 200) {
         navigate("/");
       }
@@ -48,7 +45,7 @@ export default function RecipeForm() {
   useEffect(()=>{
     const fetchRecipe = async ()=> {
       if(id){
-        const response = await axios.get(`http://localhost:4000/api/recipes/${id}`);
+        const response = await axios.get(`/api/recipes/${id}`);
         if(response.status === 200){
           console.log(response.data)
           setTitle(response.data.title)

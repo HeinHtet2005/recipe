@@ -1,9 +1,41 @@
-import { useState } from "react"
-
-export default function Login(){
-    const [loading,setLoading] = useState(false);
-    return(
-            <>
+import { useState } from "react";
+import axios from "../helpers/axios";
+import { useNavigate } from "react-router";
+export default function Login() {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      setLoading(true);
+      setError(null);
+      let user = {
+        email,
+        password,
+      };
+      const response = await axios.post(
+        "/api/users/login",
+        user,
+        {withCredentials:true}
+      );
+      if (response.status == 201) {
+        console.log("Login Success");
+        setEmail("");
+        setPassword("");
+        navigate('/');
+      }
+    } catch (error) {
+      setError(error.response.data.errors);
+      console.log(error.response.data.errors);
+    } finally {
+      setLoading(false);
+    }
+  };
+  return (
+    <>
       <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-orange-400">
@@ -12,8 +44,12 @@ export default function Login(){
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form action="#" method="POST" className="space-y-6" >
-
+          <form
+            action="#"
+            method="POST"
+            className="space-y-6"
+            onSubmit={handleSubmit}
+          >
             <div>
               <label
                 htmlFor="email"
@@ -28,6 +64,8 @@ export default function Login(){
                   type="email"
                   required
                   autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-orange-600 sm:text-sm/6"
                 />
               </div>
@@ -46,7 +84,9 @@ export default function Login(){
                 <input
                   id="password"
                   name="password"
-                  type="password"               
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   autoComplete="current-password"
                   className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-orange-600 sm:text-sm/6"
                 />
@@ -58,12 +98,12 @@ export default function Login(){
                 type="submit"
                 className="flex w-full cursor-pointer justify-center rounded-md bg-orange-400 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-orange-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
               >
-                {loading ? 'Loading.....':'Sign in'}
+                {loading ? "Loading....." : "Sign in"}
               </button>
             </div>
           </form>
         </div>
       </div>
     </>
-    )
+  );
 }

@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { faker } from "@faker-js/faker";
 import Recipe from "./models/Recipe.js";
 
-mongoose.connect('mongodb+srv://heinzin121021_db_user:Io61STpbROwZRX6N@mern-cluster.39arczc.mongodb.net/?appName=MERN-Cluster');
+mongoose.connect('mongodb://127.0.0.1:27017/mern-project');
 
 const generateRecipes = (count) => {
   const recipes = [];

@@ -1,6 +1,13 @@
+import { useContext } from "react";
 import { Link } from "react-router";
+import { AuthContext } from "../contexts/AuthContext";
+
 
 export default function NavBar() {
+
+const {name} = useContext(AuthContext)
+console.log(name)
+
   return (
     <nav className="bg-white shadow-md">
       <div className="mx-auto max-w-7xl px-6">

@@ -2,7 +2,7 @@ import Pagination from "../components/Pagination";
 import RecipeCard from "../components/RecipeCard";
 import { useLocation,useNavigate } from "react-router";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../helpers/axios";
 
 export default function Home() {
   const [recipes, setRecipes] = useState([]);
@@ -11,14 +11,16 @@ export default function Home() {
   const location = useLocation();
   const navigate = useNavigate();
   const searchQuery = new URLSearchParams(location.search);
-  const page = parseInt(searchQuery.get('page'))
+  
+  let page = searchQuery.get('page');
+  page = parseInt(page)?parseInt(page):1;
   
 
   useEffect(() => {
     const fetchRecipes = async () => {
-      const responses = await fetch("http://localhost:4000/api/recipes/?page="+page);
-      if (responses.ok) {
-        const data = await responses.json();
+      const response = await axios.get("/api/recipes?page="+page);
+      if (response.status === 200) {
+        const data = response.data;
         setRecipes(data.data);
         setLinks(data.links)
         window.scroll({top:0,left:0, behavior:"smooth"})
@@ -35,7 +37,7 @@ export default function Home() {
     }
 
    
-    const response = await axios.delete(`http://localhost:4000/api/recipes/${id}`)
+    const response = await axios.delete(`/api/recipes/${id}`)
 
     if(response.status == '200'){
       console.log(id," is deleted")

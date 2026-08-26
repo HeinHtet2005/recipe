@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema(
@@ -20,19 +20,20 @@ const UserSchema = new Schema(
   },
   { timestamps: true },
 );
+
 UserSchema.statics.login = async function (email, password) {
   const isValidUser = await this.findOne({ email });
-  if(!isValidUser){
-    throw new Error("User does't exist")
+  if (!isValidUser) {
+    console.log("here")
+    throw new Error("User does't exist");
   }
-  const isValidPassword = await bcrypt.compare(password,user.password);
-  if(isValidPassword){
-    return isValidUser
-  }else{
-    throw new Error("Wrong Password")
+  const isValidPassword = await bcrypt.compare(password, isValidUser.password);
+  if (isValidPassword) {
+    return isValidUser;
+  } else {
+    throw new Error("Wrong Password");
   }
-
-}
+};
 UserSchema.statics.register = async function (name, email, password) {
   const isUserExist = await this.findOne({ email });
   if (isUserExist) {

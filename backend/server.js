@@ -6,8 +6,10 @@ const cookieParser = require('cookie-parser')
 const morgan = require('morgan')
 const app = express();
 const mongoose = require('mongoose')
-const mongoURL = 'mongodb+srv://heinzin121021_db_user:Io61STpbROwZRX6N@mern-cluster.39arczc.mongodb.net/?appName=MERN-Cluster'
+// const mongoURL = 'mongodb+srv://heinzin121021_db_user:Io61STpbROwZRX6N@mern-cluster.39arczc.mongodb.net/?appName=MERN-Cluster'
+const mongoURL = 'mongodb://127.0.0.1:27017/mern-project';
 const cors = require('cors');
+const AuthMiddleware = require('./middlewares/authMiddleware');
 
 mongoose.connect(mongoURL).then(()=>{
     console.log('connected to db')
@@ -28,7 +30,7 @@ app.use(express.json());
 
 
 
-app.use('/api/recipes',recipesRoutes);
+app.use('/api/recipes',AuthMiddleware,recipesRoutes);
 app.use('/api/users',userRoutes);
 
 
