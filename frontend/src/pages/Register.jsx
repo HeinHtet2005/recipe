@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "../helpers/axios";
 import { useNavigate } from "react-router";
+import { AuthContext } from "../contexts/AuthContext";
 export default function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -8,7 +9,7 @@ export default function Register() {
   const [loading,setLoading] = useState(false)
   const [error,setError] = useState(null);
   const navigate = useNavigate();
-
+  const {dispatch} = useContext(AuthContext)
   const handleSubmit = async (e) => {
 
    try {
@@ -28,6 +29,7 @@ export default function Register() {
         setEmail('')
         setPassword('')  
         navigate('/')
+        dispatch({type:'LOGIN',payload:response.data.data})
     }
    } catch (error) {
     setError(error.response.data.errors)

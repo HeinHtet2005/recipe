@@ -1,6 +1,7 @@
 
 const Recipe = require("../models/Recipe");
 const mongoose = require('mongoose')
+
 const RecipeController = {
     index:async(req,res)=>{
 
@@ -92,6 +93,16 @@ const RecipeController = {
             return res.status(500).json({msg:"Internal Server Error"})
         }
     },
+    upload:async(req,res)=>{
+        try{
+              console.log(req.file);
+             console.log(req.body);
+            return res.json({msg:"uploaded"})
+        }catch(error){
+            console.log(error);
+            return res.status(500).json({msg:'internet server error'})
+        }
+    }
 
 };
 

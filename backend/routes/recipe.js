@@ -1,5 +1,5 @@
 
-
+const upload = require('../helpers/upload')
 const handleMessage = require('../middlewares/handleMessage')
 const express = require('express');
 const {body} = require('express-validator')
@@ -16,6 +16,6 @@ router.post('',[
 router.get('/:id',RecipeController.show)
 router.delete('/:id',RecipeController.destory)
 router.patch('/:id',RecipeController.update)
-
+router.post('/:id/upload',upload.single('photo'),RecipeController.upload)
 
 module.exports = router;

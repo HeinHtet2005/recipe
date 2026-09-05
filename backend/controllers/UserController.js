@@ -19,7 +19,6 @@ const UserController = {
             })
             
         }catch(error){
-            console.log("here",)
             return res.status(400).json({error:error.message})
         }
     },

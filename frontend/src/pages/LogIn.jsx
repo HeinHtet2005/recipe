@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useState,useContext } from "react";
 import axios from "../helpers/axios";
 import { useNavigate } from "react-router";
+import { AuthContext } from "../contexts/AuthContext";
 export default function Login() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const {dispatch}= useContext(AuthContext);
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
@@ -22,9 +24,11 @@ export default function Login() {
       );
       if (response.status == 201) {
         console.log("Login Success");
+        console.log(response.data.data)
         setEmail("");
         setPassword("");
         navigate('/');
+        dispatch({type:'LOGIN',payload:response.data.data})
       }
     } catch (error) {
       setError(error.response.data.errors);
