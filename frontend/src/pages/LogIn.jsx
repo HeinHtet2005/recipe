@@ -23,8 +23,6 @@ export default function Login() {
         user,
       );
       if (response.status == 201) {
-        console.log("Login Success");
-        console.log(response.data.data)
         setEmail("");
         setPassword("");
         navigate('/');
@@ -32,7 +30,6 @@ export default function Login() {
       }
     } catch (error) {
       setError(error.response.data.errors);
-      console.log(error.response.data.errors);
     } finally {
       setLoading(false);
     }

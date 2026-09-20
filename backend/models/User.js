@@ -24,7 +24,7 @@ const UserSchema = new Schema(
 UserSchema.statics.login = async function (email, password) {
   const isValidUser = await this.findOne({ email });
   if (!isValidUser) {
-    console.log("here")
+   
     throw new Error("User does't exist");
   }
   const isValidPassword = await bcrypt.compare(password, isValidUser.password);

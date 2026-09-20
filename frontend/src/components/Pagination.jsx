@@ -2,9 +2,9 @@ import { Link } from "react-router";
 
 export default function Pagination({ links, page }) {
 
-    console.log()
+
   return (
-    <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+    <div className="flex items-center mt-3 justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
       <div className="flex flex-1 justify-between sm:hidden">
         <a
           href="#"

@@ -1,6 +1,9 @@
 const User = require('../models/User')
 const generateToken = require('../helpers/token')
 const UserController = {
+    me:(req,res)=>{
+        return res.send(req.authenticatedUser)
+    },
     login :async (req,res)=>{
         try{
             const {email,password} = req.body;

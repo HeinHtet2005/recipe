@@ -1,23 +1,27 @@
 import { useEffect, useState } from "react";
 import plus from "../assets/plus.svg";
 import Ingredients from "../components/Ingredients";
-import { useNavigate,useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import axios from "../helpers/axios";
 export default function RecipeForm() {
-  const {id} = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
   const [ingredient, setIngredient] = useState([]);
   const [title, setTitle] = useState("");
+  const [file, setFile] = useState(null);
+  const [preview, setPreview] = useState(null);
   const [description, setDescription] = useState("");
   const [newIngredient, setNewIngredient] = useState("");
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState([]);
+
+  
   const addIngredient = () => {
     setIngredient((prev) => [newIngredient, ...prev]);
     setNewIngredient("");
   };
 
-    const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     const recipe = {
@@ -27,7 +31,17 @@ export default function RecipeForm() {
     };
 
     try {
-      const response = id ? await axios.patch( "/api/recipes/"+id,recipe):await axios.post("/api/recipes",recipe,);
+      const response = id
+        ? await axios.patch("/api/recipes/" + id, recipe)
+        : await axios.post("/api/recipes", recipe);
+
+      if (file) {
+        const formData = new FormData();
+        formData.append("photo", file);
+
+        await axios.post(`/api/recipes/${response.data._id}/upload`, formData);
+      }
+
       if (response.status === 200) {
         navigate("/");
       }
@@ -42,34 +56,53 @@ export default function RecipeForm() {
     }
   };
 
-  useEffect(()=>{
-    const fetchRecipe = async ()=> {
-      if(id){
+  useEffect(() => {
+    const fetchRecipe = async () => {
+      if (id) {
         const response = await axios.get(`/api/recipes/${id}`);
-        if(response.status === 200){
-          console.log(response.data)
-          setTitle(response.data.title)
-          setDescription(response.data.description)
-          setIngredient(response.data.ingredients)
+        if (response.status === 200) {
+          setPreview(import.meta.env.VITE_BACKEND_URL + response.data.photo);
+          setTitle(response.data.title);
+          setDescription(response.data.description);
+          setIngredient(response.data.ingredients);
         }
       }
-
-    }
+    };
 
     fetchRecipe();
-  },[id])
+  }, [id]);
+
+  const upload = (e) => {
+    const file = e.target.files[0];
+    setFile(file);
+    //preview photo
+    const fileReader = new FileReader();
+
+    fileReader.onload = (e) => {
+      setPreview(e.target.result);
+    };
+    fileReader.readAsDataURL(file);
+  };
   return (
     <div className="mx-auto max-w-md mt-12">
       <h1 className="text-2xl text-orange-400 text-center font-bold">
-        { id ? "Update ": "Create "}Recipe
-       
+        {id ? "Update " : "Create "}Recipe
       </h1>
       <form action="" className="space-y-5  p-5 " onSubmit={handleSubmit}>
-        <ul className = "list-disc">
+        <ul className="list-disc">
           {!!errors.length &&
-            errors.map((error, index) => <li key={index} className="text-red-500">Requried {error}!</li>)}
+            errors.map((error, index) => (
+              <li key={index} className="text-red-500">
+                Requried {error}!
+              </li>
+            ))}
         </ul>
-
+        <input
+          type="file"
+          placeholder="Upload Recipe Photo"
+          onChange={upload}
+        />
+        {preview && <img src={preview} alt="" />}
         <input
           type="text"
           placeholder="Recipe Title"
@@ -104,7 +137,13 @@ export default function RecipeForm() {
           type="submit"
           className={`${loading ? "bg-orange-300" : "bg-orange-400 "}px-4 py-2 text-white font-bold text-md cursor-pointer rounded-lg w-full`}
         >
-          {loading ? (id ? "Updating..." : "Creating...") : (id ? "Update Recipe" : "Create Recipe")}
+          {loading
+            ? id
+              ? "Updating..."
+              : "Creating..."
+            : id
+              ? "Update Recipe"
+              : "Create Recipe"}
         </button>
       </form>
     </div>

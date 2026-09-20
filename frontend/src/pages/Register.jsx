@@ -23,8 +23,7 @@ export default function Register() {
     }
     const response = await axios.post('/api/users/register',user,);
     if(response.status == 201){
-        console.log("success:",response)
-        console.log(response.data.token)
+    
         setName('')
         setEmail('')
         setPassword('')  
@@ -33,7 +32,7 @@ export default function Register() {
     }
    } catch (error) {
     setError(error.response.data.errors)
-    console.log(error.response.data.errors)
+
    }
    finally{
     setLoading(false)
